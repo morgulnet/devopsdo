@@ -1,0 +1,57 @@
+---
+- hosts: all
+  become: False
+  gather_facts: False
+  vars:
+    date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+  pre_tasks:
+    - name: Check ssh connection
+      local_action:
+          shell ssh -o UserKnownHostsFile=/dev/null -o \
+          StrictHostKeyChecking=no ubuntu@{{ inventory_hostname }} \
+          "echo success"
+      register: ssh_enabled
+      until: ssh_enabled.rc == 0
+      become: False
+      retries: 18
+      delay: 10
+      check_mode: no
+    - name: Gather facts
+      setup:
+    - name: Check first run
+      ansible.builtin.stat:
+        path: "/etc/docker-compose/.donoteditthisfile"
+      register: first_run_check
+  roles:
+    - wireguard
+  post_tasks:
+    - name: Wait wireguard run
+      become: True
+      shell: "docker exec -it wireguard wg show wg0"
+      register: wireguard_status
+      retries: 18
+      delay: 10
+      until: wireguard_status.rc == 0
+      when: not first_run_check.stat.exists
+
+    - name: "First generate config"
+      become: True
+      ansible.builtin.shell: |
+        docker build -t gen-key1 /etc/docker-compose/wireguard/genconfig/
+        ip="`curl 2ip.ru`" && docker run -ti --env IP=${ip} -v /etc/docker-compose/wireguard/genconfig/:/tmp gen-key1 /bin/bash
+        sudo mv /etc/docker-compose/wireguard/genconfig/wg0.conf /etc/docker-compose/wireguard/config/wg0.conf
+        touch /etc/docker-compose/.donoteditthisfile
+      when: not first_run_check.stat.exists
+
+    - name: Copy wireguard client conf file to local 
+      ansible.builtin.fetch:
+        src: /etc/docker-compose/wireguard/genconfig/client.conf
+        dest: "~/wireguard/wg_client_{{ date }}.conf"
+        flat: yes
+
+    - name: "Reinitialize wireguard"
+      become: True
+      ansible.builtin.systemd:
+        name: wireguard.service
+        state: restarted
+      when: not first_run_check.stat.exists

@@ -1,0 +1,14 @@
+# DN defaults:
+export CA_DN_DEFAULT_COUNTRY_CODE=RU
+export CA_DN_DEFAULT_STATE_OR_PROVINCE="Moscow"
+export CA_DN_DEFAULT_LOCALITY="Moscow"
+export CA_DN_DEFAULT_ORG="devops.do"
+export CA_DN_DEFAULT_ORG_UNIT=DEVOPSDO
+export CA_DN_DEFAULT_EMAIL_ADDRESS="admin@devops.do"
+export CA_DN_DEFAULT_COMMON_NAME="."
+# Certificate settings:
+export DEFAULT_BITS=2048
+export DEFAULT_CA_DAYS=1826
+export DEFAULT_DAYS=365
+export NS_CLIENT_CERT_COMMENT="OpenSSL Generated Server Certificate"
+export NS_SERVER_CERT_COMMENT="OpenSSL Generated Server Certificate"

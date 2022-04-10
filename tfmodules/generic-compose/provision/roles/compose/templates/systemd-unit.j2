@@ -1,0 +1,22 @@
+[Unit]
+Description={{ service_name }} docker compose service
+Requires=docker.service
+After=docker.service network-online.target
+
+[Service]
+User={{ service_name }}
+Group={{ service_name }}
+
+ExecStartPre=/usr/local/bin/docker-compose -f /etc/docker-compose/{{ service_name }}/docker-compose.yaml down
+ExecStartPre=/usr/local/bin/docker-compose -f /etc/docker-compose/{{ service_name }}/docker-compose.yaml rm
+
+# Compose up
+ExecStart=/usr/local/bin/docker-compose -f /etc/docker-compose/{{ service_name }}/docker-compose.yaml up {{ service_name }}
+
+# Compose down, remove containers and volumes
+ExecStop=/usr/local/bin/docker-compose -f /etc/docker-compose/{{ service_name }}/docker-compose.yaml down
+
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

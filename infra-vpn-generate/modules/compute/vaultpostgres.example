@@ -1,0 +1,19 @@
+module "vault_pgsql" {
+
+  source = "../../../tfmodules/postgresql"
+  cluster_name = "vault"
+  network_id   = var.network_id
+  description  = "Vault PostgreSQL"
+
+  environment        = "PRESTABLE"
+  resource_preset_id = "s2.micro"
+  disk_size          = 10
+
+  hosts = [
+    {
+      zone             = "ru-central1-a",
+      subnet_id        = var.subnet_id
+      assign_public_ip = false
+    }
+  ]
+}

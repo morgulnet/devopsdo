@@ -1,0 +1,80 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hotrod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotrod
+  namespace: hotrod
+spec:
+  selector:
+    matchLabels:
+      app: hotrod
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hotrod
+    spec:
+      containers:
+      - name: hotrod
+        image: jaegertracing/example-hotrod:latest
+        ports:
+        - name: web
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: JAEGER_AGENT_HOST
+          value: "simplest-agent.observability"
+        - name: JAEGER_AGENT_PORT
+          value: "6831"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hotrod
+  name: hotrod
+  namespace: hotrod
+spec:
+  ports:
+  - name: tcp-8080
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: hotrod
+  sessionAffinity: None
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-hotrod
+  namespace: hotrod
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+    #cert-manager.io/cluster-issuer: cluster-issuer
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    #cert-manager.io/common-name: hotrod.k8s.dev.devops.do
+spec:
+  # tls: 
+  #   - hosts: 
+  #       - "hotrod.k8s.dev.devops.do"
+  #     secretName: hotrod-tls
+  rules:
+  - host: hotrod.k8s.dev.devops.do
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hotrod
+          servicePort: 8080
+

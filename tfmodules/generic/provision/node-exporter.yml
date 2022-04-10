@@ -1,0 +1,57 @@
+---
+- hosts: all
+  become: True
+  gather_facts: False
+  tasks:
+    - name: Check ssh connection
+      local_action:
+          shell ssh -o UserKnownHostsFile=/dev/null -o \
+          StrictHostKeyChecking=no ubuntu@{{ inventory_hostname }} \
+          "echo success"
+      register: ssh_enabled
+      until: ssh_enabled.rc == 0
+      become: False
+      retries: 18
+      delay: 10
+
+    - name: Create temp directory
+      file:
+        path: /root/tmp
+        state: directory
+
+    - name: Create node_exporter group
+      group:
+        name: node-exporter
+        system: yes
+
+    - name: Create node-exporter user
+      user:
+        name: node-exporter
+        group: node-exporter
+        shell: /sbin/nologin
+
+    - name: Download node_exporter from Github
+      unarchive:
+        src: https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
+        dest: /usr/local/bin/
+        extra_opts: [--strip-components=1]
+        remote_src: yes
+
+    - name: Copy systemd service for node exporter
+      template:
+        src: ./files/node-exporter.service.j2
+        dest: /etc/systemd/system/node-exporter.service
+        owner: root
+        group: root
+        mode: '0660'
+
+    - name: Sytemd reload
+      systemd:
+        daemon_reload: yes
+
+    - name: Start and enable node-exporter
+      systemd:
+        name: node-exporter.service
+        state: restarted
+        enabled: yes
+

@@ -1,0 +1,97 @@
+---
+- name: "Add new user wireguard"
+  become: True
+  user:
+    name: wireguard
+    shell: /sbin/nologin
+    groups: docker
+    comment: "wireguard user"
+
+- name: "Disable yandex container service"
+  become: True
+  ansible.builtin.systemd:
+    name: yc-container-daemon.service
+    enabled: False
+    state: stopped
+
+- name: Create docker folder for wireguard
+  become: True
+  ansible.builtin.file:
+    path: "/home/wireguard/.docker"
+    state: directory
+    owner: "wireguard"
+    group: "wireguard"
+
+- name: Create directories for wireguard
+  become: True
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+  with_items:
+    - "/etc/docker-compose/"
+    - "/etc/docker-compose/wireguard/"
+    - "/etc/docker-compose/wireguard/genconfig/"
+
+- name: "Copy wg gen dockerfile"
+  become: true
+  ansible.builtin.copy:
+    src: "files/Dockerfile"
+    dest: "/etc/docker-compose/wireguard/genconfig/Dockerfile"
+    owner: "wireguard"
+    group: "wireguard"
+    mode: 0600
+
+- name: "Copy wg gen script"
+  become: true
+  ansible.builtin.copy:
+    src: "files/entrypoint.sh"
+    dest: "/etc/docker-compose/wireguard/genconfig/entrypoint.sh"
+    owner: "wireguard"
+    group: "wireguard"
+    mode: 0645
+
+- name: "Allow traffic forward"
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+  become: True
+
+- name: "Routing optimize"
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.src_valid_mark
+    value: '1'
+    sysctl_set: yes
+  become: True
+
+- name: Create directories for wireguard config
+  become: True
+  ansible.builtin.file:
+    path: "/etc/docker-compose/wireguard/config/"
+    state: directory
+    mode: 0777
+
+- name: "Copy docker-compose file"
+  become: True
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "/etc/docker-compose/wireguard/docker-compose.yaml"
+  notify:
+    - Restart wireguard
+
+- name: "Create environment file"
+  become: True
+  ansible.builtin.template:
+    src: "env.j2"
+    dest: "/etc/docker-compose/wireguard/env"
+  notify:
+    - Restart wireguard
+
+- name: "Create wireguard systemd unit"
+  become: True
+  template:
+    src: systemd-unit.j2
+    dest: /etc/systemd/system/wireguard.service
+  notify:
+    - Restart wireguard
