@@ -1,0 +1,8 @@
+---
+env: "test"
+
+service_image:              "praqma/network-multitool"
+nat_ip_address:               "1.1.1.1" # external ip
+internal_ip:        "10.200.13.1"
+internal_dns:                "8.8.8.8, 8.8.8.9"
+custom_config: "# Custom server configs"

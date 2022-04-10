@@ -1,0 +1,22 @@
+[Unit]
+Description=Wireguard docker compose service
+Requires=docker.service
+After=docker.service network-online.target
+
+[Service]
+User=wireguard
+Group=wireguard
+
+ExecStartPre=/usr/local/bin/docker-compose -f /etc/docker-compose/wireguard/docker-compose.yaml down
+ExecStartPre=/usr/local/bin/docker-compose -f /etc/docker-compose/wireguard/docker-compose.yaml rm
+
+# Compose up
+ExecStart=/usr/local/bin/docker-compose -f /etc/docker-compose/wireguard/docker-compose.yaml up wireguard
+
+# Compose down, remove containers and volumes
+ExecStop=/usr/local/bin/docker-compose -f /etc/docker-compose/wireguard/docker-compose.yaml down
+
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

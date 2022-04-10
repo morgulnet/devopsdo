@@ -1,0 +1,41 @@
+---
+- hosts: all
+  become: False
+  gather_facts: False
+  pre_tasks:
+    - name: Check ssh connection
+      local_action:
+          shell ssh -o UserKnownHostsFile=/dev/null -o \
+          StrictHostKeyChecking=no ubuntu@{{ inventory_hostname }} \
+          "echo success"
+      register: ssh_enabled
+      until: ssh_enabled.rc == 0
+      become: False
+      retries: 18
+      delay: 10
+      check_mode: no
+    - name: Gather facts
+      setup:
+    - name: Check first run
+      ansible.builtin.stat:
+        path: "/etc/docker-compose/{{ service_name }}/config/.donoteditthisfile"
+      register: first_run_check
+  roles:
+    - compose
+  # post_tasks:
+  #   - name: Wait service run
+  #     become: True
+  #     shell: "docker exec -it wireguard wg show wg0"
+  #     register: wireg130.193.39.74uard_status
+  #     retries: 18
+  #     delay: 10
+  #     until: wireguard_status.rc == 0
+  #     when: not first_run_check.stat.exists
+
+    # - name: "Reinitialize service"
+    #   become: True
+    #   ansible.builtin.systemd:
+    #     name: {{ service_name }}.service
+    #     state: restarted
+    #   when: not first_run_check.stat.exists
+

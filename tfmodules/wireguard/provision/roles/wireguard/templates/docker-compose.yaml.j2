@@ -1,0 +1,24 @@
+---
+version: '3'
+services:
+  wireguard:
+    image: "{{ wireguard_image }}"
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - SERVERURL={{ nat_ip_address }}
+      - SERVERPORT={{ wireguard_port }} #optional
+      - PEERS=0
+      - INTERNAL_SUBNET={{ wireguard_client_network }}
+      - ALLOWEDIPS={{ wireguard_allowed_ips }}
+      - PEERDNS={{ wireguard_dns }}
+    volumes:
+      - /etc/docker-compose/wireguard/config/:/config
+      - /lib/modules:/lib/modules
+    network_mode: host
+    privileged: true

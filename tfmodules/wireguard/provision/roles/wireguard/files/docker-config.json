@@ -1,0 +1,7 @@
+{
+	"auths": {
+		"cr.yandex": {
+			"auth": "TokenAuth"
+		}
+	}
+}

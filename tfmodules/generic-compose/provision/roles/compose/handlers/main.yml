@@ -1,0 +1,10 @@
+---
+- name: "Restart service"
+  become: yes
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    daemon_reload: yes
+    state: restarted
+  with_items:
+    "{{ service_name }}"
+    

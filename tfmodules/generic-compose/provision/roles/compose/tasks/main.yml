@@ -1,0 +1,90 @@
+---
+- name: "Add new service user"
+  become: True
+  user:
+    name: "{{ service_name }}"
+    shell: /sbin/nologin
+    groups: docker
+    comment: "custom service user"
+
+- name: "Disable yandex container service"
+  become: True
+  ansible.builtin.systemd:
+    name: yc-container-daemon.service
+    enabled: False
+    state: stopped
+
+- name: Create docker folder for service
+  become: True
+  ansible.builtin.file:
+    path: "/home/{{ service_name }}/.docker"
+    state: directory
+    owner: "{{ service_name }}"
+    group: "{{ service_name }}"
+
+# - name: "Configure registry login"
+#   become: true
+#   ansible.builtin.copy:
+#     src: "files/docker-config.json"
+#     dest: "/home/{{ service_name }}/.docker/config.json"
+#     owner: "{{ service_name }}"
+#     group: "{{ service_name }}"
+#     mode: 0600
+- name: Create directories for service
+  become: True
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+  with_items:
+    - "/etc/docker-compose/"
+    - "/etc/docker-compose/{{ service_name }}/"
+
+- name: "Copy postgre creds env"
+  become: true
+  ansible.builtin.copy:
+    src: "files/postgre-creds.env"
+    dest: "/etc/docker-compose/{{ service_name }}/postgre-creds.env"
+    owner: "{{ service_name }}"
+    group: "{{ service_name }}"
+    mode: 0645
+
+- name: "Allow traffic forward"
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+  become: True
+
+- name: "Routing optimize"
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.src_valid_mark
+    value: '1'
+    sysctl_set: yes
+  become: True
+
+- copy:
+    content: "{{ custom_config | b64decode }}"
+    dest: "/etc/docker-compose/{{ service_name }}/docker-compose.yaml"
+  become: True
+
+- copy:
+    content: "{{ vault_env | b64decode }}"
+    dest: "/etc/docker-compose/{{ service_name }}/vault.env"
+  become: True
+
+# - name: "Copy docker-compose file"
+#   become: True
+#   ansible.builtin.template:
+#     src: "docker-compose.yaml.j2"
+#     dest: "/etc/docker-compose/wireguard/docker-compose.yaml"
+#   notify:
+#     - Restart wireguard
+
+- name: "Create wireguard systemd unit"
+  become: True
+  template:
+    src: systemd-unit.j2
+    dest: /etc/systemd/system/{{ service_name }}.service
+  notify:
+    - Restart service

@@ -1,0 +1,15 @@
+---
+env: "test"
+
+wireguard_image:              "linuxserver/wireguard:version-v1.0.20210914"
+wireguard_port:               51820
+nat_ip_address:               "1.1.1.1" # external ip
+wireguard_client_network:     "10.200.13.0"
+wireguard_internal_ip:        "10.200.13.1"
+wireguard_allowed_ips:        "10.1.13.0/16, 10.10.13.0/16"
+wireguard_srv_public_key:     "asdasdasdasdasdasdasdasdasdadsasdasdasdasd"
+wireguard_srv_private_key:    "asdasdasdadsadasdasdasdasdadsadsasdasdasda"
+wireguard_config_path:        "/etc/docker-compose/wireguard/config/wg0.conf"
+wireguard_dns:                "8.8.8.8, 8.8.8.9"
+wireguard_restart_path_flag: "/etc/docker-compose/wireguard/config/wireguard-restart"
+wireguard_custom_server_config: "# Custom server configs"

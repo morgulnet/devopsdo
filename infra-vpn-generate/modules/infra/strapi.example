@@ -1,0 +1,43 @@
+module "strapi" {
+  source = "../../../tfmodules/generic-compose"
+
+  # vm settings
+  vm_name             = "strapi"
+  image_id            = data.yandex_compute_image.ubuntu-latest.id
+  num                 = 1
+  cpu                 = 2
+  memory              = 4
+  disk                = 50
+  internal_ip_address = "192.168.101.34"
+  nat                 = false
+  subnet_id           = var.subnet_id
+  
+  custom_config = <<EOF
+# The place for a custom server config
+    version: '3'
+    services:
+      strapi:
+        image: strapi/strapi
+        environment:
+          DATABASE_CLIENT: postgres
+          DATABASE_PORT: 5432
+        env_file:
+          - postgre-creds.env
+        volumes:
+          - ./app:/srv/app
+        ports:
+          - '8081:1337'
+          - '8080:8080'
+        depends_on:
+          - postgres
+      postgres:
+        image: postgres
+        environment:
+          POSTGRES_DB: strapi
+          POSTGRES_USER: strapi
+          POSTGRES_PASSWORD: strapi
+        volumes:
+          - ./data:/var/lib/postgresql/data
+EOF
+  # custom settings
+}

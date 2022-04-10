@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if [ -f "{{ wireguard_restart_path_flag }}" ]; then
+  echo "Reload wireguard config"
+  /usr/local/bin/docker-compose -f /etc/docker-compose/wireguard/docker-compose.yaml exec -T wireguard \
+  bash -c 'wg syncconf wg0 <(wg-quick strip wg0)'
+  echo "Delete wireguard restart flag"
+  rm {{ wireguard_restart_path_flag }}
+fi
