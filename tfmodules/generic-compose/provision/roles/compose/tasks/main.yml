@@ -88,4 +88,3 @@
     dest: /etc/systemd/system/{{ service_name }}.service
   notify:
     - Restart service
-

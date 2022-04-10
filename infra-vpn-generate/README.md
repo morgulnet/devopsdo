@@ -51,3 +51,6 @@ istio
 flagger
 cicd
 waf
+consul
+metrics 
+logs efk
