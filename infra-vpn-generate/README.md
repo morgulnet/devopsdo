@@ -41,16 +41,31 @@ http://hotrod.k8s.dev.devops.do
 ## 7. Добавлен фолдер .ca
 Генерация корневого ,промежуточного (intermediate vault),клиентского (vault) сертификатов 
 
-TODO
+## TODO
 Выенсти терраформ стейт на s3
+на момент инициализации бакета не существует
+
 DB on vm
-vault 
+кроссклауд возможен только на бареметале
+
+vault (db need)
 PKI
-certmanager
+secrets in k8s
+
+certmanager (need vault pki)
+
 istio
-flagger
-cicd
-waf
+flagger Progressive Delivery (need istio)
+
 consul
+All services in registry
+
 metrics 
 logs efk
+
+ldap
+keycloak
+
+WAF
+
+cicd
