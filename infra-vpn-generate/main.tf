@@ -73,8 +73,11 @@ module "k8s_lb" {
   token     = var.token
   cloud_id  = var.cloud_id
   folder_id = var.folder_id
-
+  
+  yandex_vpc_subnet_dev_k8s_a = module.networks.yandex_vpc_subnet_dev_k8s_a
   yandex_dns_zone_id = module.networks.yandex_dns_zone_id
   
-  dependencies = ["${module.networks.yandex_dns_zone_id}"]
+  dependencies = [
+    module.networks.yandex_dns_zone_id
+  ]
 }

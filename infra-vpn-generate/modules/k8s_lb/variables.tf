@@ -18,6 +18,11 @@ variable "yandex_dns_zone_id" {
   type = string
 }
 
+variable "yandex_vpc_subnet_dev_k8s_a" {
+  description = "yandex_vpc_subnet_dev_k8s_a Id"
+  type = string
+}
+
 variable "dependencies" {
   # Do the following in the module declaration:
   # dependencies = ["${some_resource.resource_alias.id}"]

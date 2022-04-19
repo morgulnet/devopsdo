@@ -3,7 +3,7 @@ resource "kubernetes_service" "nginx-ingress-controller-lb" {
     name = "nginx-ingress-controller-lb"
     namespace = "nginx-ingress-controller"
     annotations = {"yandex.cloud/load-balancer-type" = "internal", 
-    "yandex.cloud/subnet-id" = "${data.external.get_subnet_id.result.ecoded_doc}"}
+    "yandex.cloud/subnet-id" = "${var.yandex_vpc_subnet_dev_k8s_a}"}
   }
   spec {
     selector = {
