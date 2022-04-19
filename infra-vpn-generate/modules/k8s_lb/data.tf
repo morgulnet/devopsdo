@@ -1,10 +1,10 @@
-data "external" "svc_internal_ip" {
-  program = ["bash", "${path.module}/get_svc_ip.bash"]
+# data "external" "svc_internal_ip" {
+#   program = ["bash", "${path.module}/get_svc_ip.bash"]
 
-  query = {
-    svc_name = "nginx-ingress-controller-lb"
-  }
-}
+#   query = {
+#     svc_name = "nginx-ingress-controller-lb"
+#   }
+# }
 
 data "external" "get_subnet_id" {
   program = ["bash", "${path.module}/get_subnet_id.bash"]

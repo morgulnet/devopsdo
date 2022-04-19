@@ -50,7 +50,7 @@ DB on vm
 
 vault (db need)
 PKI
-secrets in k8s
+secrets (k8s vault agent)
 
 certmanager (need vault pki)
 

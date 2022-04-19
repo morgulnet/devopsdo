@@ -13,6 +13,11 @@ variable "folder_id" {
   type = string
 }
 
+variable "yandex_dns_zone_id" {
+  description = "yandex_dns_zone Id"
+  type = string
+}
+
 variable "dependencies" {
   # Do the following in the module declaration:
   # dependencies = ["${some_resource.resource_alias.id}"]
