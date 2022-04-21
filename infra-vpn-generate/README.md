@@ -41,16 +41,22 @@ http://hotrod.k8s.dev.devops.do
 ## 7. Добавлен фолдер .ca
 Генерация корневого ,промежуточного (intermediate vault),клиентского (vault) сертификатов 
 
+## 8. Добавлена vm ldap + dns (freeipa.devops.do)
+Переработана инициализация
+Закоменчен vault env из generic compose
+
 ## TODO
 Выенсти терраформ стейт на s3
 на момент инициализации бакета не существует
+
+Создание пользователей в ldap кодом (terraform provider или другие вараинты)
 
 DB on vm
 кроссклауд возможен только на бареметале
 
 vault (db need)
 PKI
-secrets in k8s
+secrets (k8s vault agent)
 
 certmanager (need vault pki)
 
@@ -63,7 +69,6 @@ All services in registry
 metrics 
 logs efk
 
-ldap
 keycloak
 
 WAF

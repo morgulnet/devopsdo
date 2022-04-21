@@ -1,10 +1,10 @@
 module "testvm" {
-  source = "../../tfmodules/generic"
+  source = "../../../tfmodules/generic"
 
   # vm settings
   vm_name             = "testvm"
   image_id            = "fd8doth0oleutak3rt3j"
-  num                 = 1
+  num                 = 0
   cpu                 = 2
   memory              = 4
   disk                = 50

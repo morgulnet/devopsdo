@@ -36,10 +36,12 @@ provider "yandex" {
 
 provider "flux" {}
 
-provider "kubectl" {}
+provider "kubectl" {
+  config_path = "/tmp/yc-terraform-k8s"
+}
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  config_path = "/tmp/yc-terraform-k8s"
 }
 
 provider "github" {

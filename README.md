@@ -24,3 +24,16 @@ export TF_VAR_github_owner=
 export TF_VAR_github_token=
 
 Список уже сделанного и todo лист /infra-vpn-generate/README.md
+
+как использовать ?
+cd infra-vpn-generate
+terraform init
+
+# устанавливаем необходимые компоненты 
+terraform apply -auto-approve --target module.infra --target module.k8s --target module.networks
+
+# Проверяем можем ли мы получить список неймспейсов в кластере k8s
+kubectl get ns --kubeconfig=/tmp/yc-terraform-k8s 
+
+# Дораскатываем инфраструктуру
+terraform apply -auto-approve

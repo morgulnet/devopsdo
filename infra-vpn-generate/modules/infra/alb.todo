@@ -43,7 +43,7 @@ module "alb" {
   #virtual_host
   alb_virtual_host_name       = "hostname"
   alb_virtual_host_route_name = "test-route"
-  alb_virtual_host_authority  = ["test.middle-api.magnit.test"]
+  alb_virtual_host_authority  = ["test.devopsdo"]
   alb_virtual_host_timeout    = "30s"
 
 #   #alb_target_group

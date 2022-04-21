@@ -21,3 +21,7 @@ output "yandex_vpc_subnet_dev_compute" {
 output "yandex_vpc_subnet_dev_k8s_a" {
   value = yandex_vpc_subnet.dev-k8s-network-a.id
 }
+
+output "yandex_dns_zone_id"{
+  value = yandex_dns_zone.devopsdo.id
+}

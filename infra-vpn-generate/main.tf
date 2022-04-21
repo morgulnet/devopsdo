@@ -64,7 +64,7 @@ module "gitops" {
   github_token     = var.github_token
   repository_name  = "flux2_devopsdo"
   target_path      = "dev_cluster"
-  dependencies = ["module.k8s.cluster_nodes_group"]
+  dependencies = ["${module.networks.yandex_dns_zone_id}"]
 }
 
 module "k8s_lb" {
@@ -74,5 +74,10 @@ module "k8s_lb" {
   cloud_id  = var.cloud_id
   folder_id = var.folder_id
   
-  dependencies = ["module.k8s.cluster_nodes_group"]
+  yandex_vpc_subnet_dev_k8s_a = module.networks.yandex_vpc_subnet_dev_k8s_a
+  yandex_dns_zone_id = module.networks.yandex_dns_zone_id
+  
+  dependencies = [
+    module.networks.yandex_dns_zone_id
+  ]
 }

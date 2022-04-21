@@ -31,6 +31,6 @@ resource "yandex_kubernetes_node_group" "node_groups" {
     }
   }
   provisioner "local-exec" {
-    command = "yc managed-kubernetes cluster get-credentials terraform-k8s --external --force"
+    command =  "rm /tmp/yc-terraform-k8s & yc managed-kubernetes cluster get-credentials terraform-k8s --external --force --kubeconfig=/tmp/yc-terraform-k8s"
   }
 }

@@ -22,13 +22,15 @@ terraform {
 }
 
 provider "yandex" {
-  cloud_id   = var.cloud_id
-  folder_id  = var.folder_id
-  token = var.token
+  token     = var.token
+  cloud_id  = var.cloud_id
+  folder_id = var.folder_id
 }
 
-provider "kubectl" {}
+provider "kubectl" {
+  config_path = "/tmp/yc-terraform-k8s"
+}
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  config_path = "/tmp/yc-terraform-k8s"
 }

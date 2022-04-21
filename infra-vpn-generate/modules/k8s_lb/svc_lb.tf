@@ -3,7 +3,7 @@ resource "kubernetes_service" "nginx-ingress-controller-lb" {
     name = "nginx-ingress-controller-lb"
     namespace = "nginx-ingress-controller"
     annotations = {"yandex.cloud/load-balancer-type" = "internal", 
-    "yandex.cloud/subnet-id" = "${data.external.get_subnet_id.result.ecoded_doc}"}
+    "yandex.cloud/subnet-id" = "${var.yandex_vpc_subnet_dev_k8s_a}"}
   }
   spec {
     selector = {
@@ -21,6 +21,9 @@ resource "kubernetes_service" "nginx-ingress-controller-lb" {
 
     type = "LoadBalancer"
   }
+  depends_on = [
+    kubectl_manifest.nginx-ingress-controller
+  ]
 }
 
 resource "null_resource" "dependencies" {
@@ -29,8 +32,17 @@ resource "null_resource" "dependencies" {
   }
 }
 
+resource "kubectl_manifest" "nginx-ingress-controller" {
+    yaml_body = <<YAML
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-ingress-controller
+YAML
+}
+
 resource "yandex_dns_recordset" "wc_kubernetes_dev" {
-  zone_id = "${data.external.get_dnszone_id.result.ecoded_doc}"
+  zone_id = var.yandex_dns_zone_id
   name    = "*.k8s.dev.devops.do."
   type    = "A"
   ttl     = 60
@@ -39,3 +51,4 @@ resource "yandex_dns_recordset" "wc_kubernetes_dev" {
     data.kubernetes_service.nginx-ingress-controller-lb
   ]
 }
+
