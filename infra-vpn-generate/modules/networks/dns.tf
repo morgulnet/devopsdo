@@ -6,9 +6,9 @@ resource "yandex_dns_zone" "devopsdo" {
   private_networks = [yandex_vpc_network.dev-network.id]
 }
 
-resource "yandex_dns_recordset" "testvm" {
+resource "yandex_dns_recordset" "freeipa" {
   zone_id    = yandex_dns_zone.devopsdo.id
-  name       = "testvm.devops.do."
+  name       = "freeipa.devops.do."
   type       = "A"
   ttl        = 300
   data       = ["192.168.101.44"]

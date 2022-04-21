@@ -68,10 +68,10 @@
     dest: "/etc/docker-compose/{{ service_name }}/docker-compose.yaml"
   become: True
 
-- copy:
-    content: "{{ vault_env | b64decode }}"
-    dest: "/etc/docker-compose/{{ service_name }}/vault.env"
-  become: True
+# - copy:
+#     content: "{{ vault_env | b64decode }}"
+#     dest: "/etc/docker-compose/{{ service_name }}/vault.env"
+#   become: True
 
 # - name: "Copy docker-compose file"
 #   become: True

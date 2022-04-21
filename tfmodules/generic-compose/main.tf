@@ -25,9 +25,8 @@ resource "null_resource" "gencompose" {
   provisioner "local-exec" {
     command = <<EOF
         ansible-playbook -i ${module.gencompose.internal_ip[0]},                                   \
-        ${path.module}/provision/deploy.yml                                                        \
+        ${path.module}/provision/deploy.yml -v                                                       \
         -e service_name='${var.vm_name}'                                                           \
-        -e vault_env='${base64encode(data.vault_generic_secret.vault_env.data["user_data"])}'      \
         -e custom_config='${base64encode(var.custom_config)}'
     EOF
     environment = {
