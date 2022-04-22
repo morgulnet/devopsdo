@@ -17,3 +17,4 @@ spec:
       repository: stefanprodan/podinfo
       tag: dev-kb9lm91e
     replicaCount: 1
+    
