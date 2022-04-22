@@ -104,9 +104,10 @@ resource "github_repository_file" "kustomize" {
 }
 
 variable "manifests" {
-  default = ["dev_cluster/namespaces/nginx.yaml", 
-  "dev_cluster/namespaces/vault.yaml", "dev_cluster/namespaces/postgres.yaml", 
-  "dev_cluster/releases/nginx.yaml", "dev_cluster/helmrepo/nginx.yaml",
+  default = ["dev_cluster/infrastructure.yaml",
+  "dev_cluster/releases/nginx-ingress-controller/kustomization.yaml","dev_cluster/releases/nginx-ingress-controller/namespace.yaml",
+  "dev_cluster/releases/nginx-ingress-controller/nginx.yaml",
+  "dev_cluster/releases/vault/kustomization.yaml","dev_cluster/releases/vault/vault.yaml","dev_cluster/releases/vault/namespace.yaml",
   "dev_cluster/releases/hotrod.yaml"]
 }
 
