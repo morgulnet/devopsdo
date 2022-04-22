@@ -1,0 +1,19 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: podinfo-dev
+  namespace: vault
+  annotations:
+    fluxcd.io/automated: "true"
+    filter.fluxcd.io/chart-image: glob:dev-*
+spec:
+  releaseName: podinfo-dev
+  chart:
+    git: git@github.com:fluxcd/helm-operator-get-started
+    path: charts/podinfo
+    ref: master
+  values:
+    image:
+      repository: stefanprodan/podinfo
+      tag: dev-kb9lm91e
+    replicaCount: 1
