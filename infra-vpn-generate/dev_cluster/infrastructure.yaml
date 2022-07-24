@@ -8,13 +8,22 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  healthChecks:
-    - apiVersion: apps/v1
-      kind: Deployment
-      name: nginx-ingress-controller
-      namespace: nginx-ingress-controller
-  serviceAccountName: kustomize-controller
-  path: ./dev_cluster/releases/nginx-ingress-controller
+  path: ./releases/nginx-ingress-controller
+  prune: true
+  wait: true
+  timeout: 2m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: postgres-operator
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./releases/postgres-operator
   prune: true
   wait: true
   timeout: 2m
@@ -25,17 +34,11 @@ metadata:
   name: vault
   namespace: flux-system
 spec:
-  interval: 1m
+  interval: 5m
+  # dependsOn:
+  #   - name: vault-operator
   sourceRef:
     kind: GitRepository
     name: flux-system
-  healthChecks:
-    - apiVersion: apps/v1
-      kind: Deployment
-      name: vault
-      namespace: vault
-  serviceAccountName: kustomize-controller
-  path: ./dev_cluster/releases/vault
+  path: ./releases/vault
   prune: true
-  wait: true
-  timeout: 2m

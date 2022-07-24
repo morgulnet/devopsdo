@@ -27,7 +27,7 @@
   post_tasks:
     - name: Wait wireguard run
       become: True
-      shell: "docker exec -it wireguard wg show wg0"
+      shell: "docker exec -i wireguard wg show wg0"
       register: wireguard_status
       retries: 18
       delay: 10
@@ -38,7 +38,7 @@
       become: True
       ansible.builtin.shell: |
         docker build -t gen-key1 /etc/docker-compose/wireguard/genconfig/
-        ip="`curl 2ip.ru`" && docker run -ti --env IP=${ip} -v /etc/docker-compose/wireguard/genconfig/:/tmp gen-key1 /bin/bash
+        ip="`curl 2ip.ru`" && docker run -i --env IP=${ip} -v /etc/docker-compose/wireguard/genconfig/:/tmp gen-key1 /bin/bash
         sudo mv /etc/docker-compose/wireguard/genconfig/wg0.conf /etc/docker-compose/wireguard/config/wg0.conf
         touch /etc/docker-compose/.donoteditthisfile
       when: not first_run_check.stat.exists

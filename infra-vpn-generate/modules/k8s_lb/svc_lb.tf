@@ -52,3 +52,13 @@ resource "yandex_dns_recordset" "wc_kubernetes_dev" {
   ]
 }
 
+resource "yandex_dns_recordset" "vault_devops_do" {
+  zone_id = var.yandex_dns_zone_id
+  name    = "vault.devops.do."
+  type    = "A"
+  ttl     = 60
+  data    = [data.kubernetes_service.nginx-ingress-controller-lb.status.0.load_balancer.0.ingress.0.ip]
+    depends_on = [
+    data.kubernetes_service.nginx-ingress-controller-lb
+  ]
+}

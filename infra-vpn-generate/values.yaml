@@ -1,0 +1,19 @@
+controller:
+  electionID: vault-ingress-controller-leader
+  ingressClass: nginx-vault
+  extraArgs:
+    enable-ssl-passthrough:
+  publishService:
+    enabled: true
+  scope:
+    enabled: true
+  replicaCount: 2
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: release
+            operator: In
+            values: ["vault-ingress"]
+        topologyKey: kubernetes.io/hostname

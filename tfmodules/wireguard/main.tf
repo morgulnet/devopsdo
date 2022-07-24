@@ -26,7 +26,7 @@ resource "null_resource" "wireguard" {
   provisioner "local-exec" {
     command = <<EOF
         ansible-playbook -i ${join(",", module.wireguard.ip_addresses)},                                        \
-        ${path.module}/provision/deploy_wireguard.yml                                                            \
+        ${path.module}/provision/deploy_wireguard.yml -v                                                           \
         -e wireguard_custom_server_config='${base64encode(var.wireguard_custom_server_config)}'
     EOF
     environment = {

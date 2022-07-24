@@ -34,8 +34,6 @@ provider "yandex" {
   token = var.token
 }
 
-provider "flux" {}
-
 provider "kubectl" {
   config_path = "/tmp/yc-terraform-k8s"
 }

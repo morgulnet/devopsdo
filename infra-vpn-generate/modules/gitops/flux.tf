@@ -105,10 +105,16 @@ resource "github_repository_file" "kustomize" {
 
 variable "manifests" {
   default = ["dev_cluster/infrastructure.yaml",
-  "dev_cluster/releases/nginx-ingress-controller/kustomization.yaml","dev_cluster/releases/nginx-ingress-controller/namespace.yaml",
-  "dev_cluster/releases/nginx-ingress-controller/nginx.yaml",
-  "dev_cluster/releases/vault/kustomization.yaml","dev_cluster/releases/vault/vault.yaml","dev_cluster/releases/vault/namespace.yaml",
-  "dev_cluster/releases/hotrod.yaml"]
+  ]
+}
+
+variable "releases" {
+  default = [
+  "releases/nginx-ingress-controller/kustomization.yaml","releases/nginx-ingress-controller/namespace.yaml",
+  "releases/nginx-ingress-controller/nginx.yaml",
+  "releases/vault/vault.yaml","releases/vault/kustomization.yaml",
+  "releases/postgres-operator/zalando.yaml","releases/postgres-operator/kustomization.yaml",
+  "releases/hotrod.yaml"]
 }
 
 resource "github_repository_file" "manifets" {
@@ -117,6 +123,16 @@ resource "github_repository_file" "manifets" {
   file = each.value
   repository = github_repository.main.name
   branch = "main"
-  commit_message = "add namespaces manifest to repo"
+  commit_message = "add infrastrcture manifest to repo"
+  overwrite_on_create = true
+}
+
+resource "github_repository_file" "releases" {
+  for_each = toset(var.releases)
+  content = file(each.value)
+  file = each.value
+  repository = github_repository.main.name
+  branch = "main"
+  commit_message = "add releases manifest to repo"
   overwrite_on_create = true
 }

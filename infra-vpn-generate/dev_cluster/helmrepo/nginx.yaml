@@ -1,9 +1,0 @@
----
-apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
-metadata:
-  name: nginx-ingress-controller
-  namespace: nginx-ingress-controller
-spec:
-  interval: 1m0s
-  url: https://charts.bitnami.com/bitnami
