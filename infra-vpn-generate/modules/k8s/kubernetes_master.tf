@@ -8,7 +8,7 @@ resource "yandex_kubernetes_cluster" "cluster" {
   release_channel         = "RAPID"
 
   master {
-    version   = "1.21"
+    version   = "1.23"
     public_ip = true
 
     zonal {

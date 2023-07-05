@@ -3,7 +3,7 @@ resource "yandex_kubernetes_node_group" "node_groups" {
   cluster_id  = yandex_kubernetes_cluster.cluster.id
   name        = "terraform-k8s-node-grp"
   description = "Kubernetes node group created by terraform"
-  version     = "1.21"
+  version     = "1.23"
 
   instance_template {
     platform_id = "standard-v2"

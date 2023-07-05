@@ -27,7 +27,8 @@ export TF_VAR_github_token=
 
 как использовать ?
 cd infra-vpn-generate
-terraform init
+terraform init (нужен впн или зеркало)
+mkdir ~/wireguard сюда будет скопирован конфиг вайргарда
 
 # устанавливаем необходимые компоненты 
 terraform apply -auto-approve --target module.infra --target module.k8s --target module.networks

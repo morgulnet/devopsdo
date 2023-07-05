@@ -52,7 +52,7 @@ spec:
   sessionAffinity: None
   type: NodePort
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-hotrod
@@ -65,16 +65,14 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #cert-manager.io/common-name: hotrod.k8s.dev.devops.do
 spec:
-  # tls: 
-  #   - hosts: 
-  #       - "hotrod.k8s.dev.devops.do"
-  #     secretName: hotrod-tls
   rules:
-  - host: hotrod.k8s.dev.devops.do
+  - host: "hotrod.k8s.dev.devops.do"
     http:
       paths:
-      - path: /
+      - pathType: Prefix
+        path: "/"
         backend:
-          serviceName: hotrod
-          servicePort: 8080
-
+          service:
+            name: hotrod
+            port:
+              number: 8080
