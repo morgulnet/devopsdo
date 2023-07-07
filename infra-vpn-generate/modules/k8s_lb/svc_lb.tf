@@ -19,6 +19,12 @@ resource "kubernetes_service" "nginx-ingress-controller-lb" {
       target_port = "http"
     }
 
+    port {
+      name        = "https"
+      port       = 443
+      protocol   = "TCP"
+      target_port = "https"
+    }
     type = "LoadBalancer"
   }
   depends_on = [
