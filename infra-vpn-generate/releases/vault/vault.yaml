@@ -67,7 +67,7 @@ spec:
             tls_ca_cert_file = "/vault/userconfig/vault-certs/rootCA.crt"
           }
           storage "postgresql" {
-            connection_url="postgres://postgres:aVbVMJsN4gT4rEg2Z0gDvIEjAjeNQslXcpNTvijSMXtG5YodoVwOAqVlQn1aHGGJ@acid-minimal-cluster:5432/vault?sslmode=require"
+            connection_url="postgres://postgres:sCbWs4j64a6smEWr0orJYWXUaeR263l4pgVooNA3pUBaONPYmI9PqIYPZQetRhxX@acid-minimal-cluster:5432/vault?sslmode=require"
             table="vault_kv_store",
             ha_enabled=true,
             ha_table="vault_ha_locks" 

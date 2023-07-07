@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-vault-db
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: psql
+        image: postgres
+        volumeMounts:
+        - name: db-sh
+          mountPath: "/script/"
+        command: ["/bin/sh"]
+        args: ["-c", "./script/psql_create_db.sh"]
+        env:
+        - name: host
+          value: {{ .Values.postgresqlHost }}
+        - name: password
+          value: {{ .Values.postgrePassword }}
+      restartPolicy: Never
+      volumes:
+      - name: db-sh
+        configMap:
+          name: db-sh
+          defaultMode: 0777
